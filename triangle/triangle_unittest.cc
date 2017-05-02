@@ -3,6 +3,8 @@
 
 // Tests triangle(). (upper bound 200)
 
+/* === Specification-based Testing === */
+
 // Boundary Value Testing
 // Normal
 TEST(TriangleTest, NormalBoundary) {
@@ -124,4 +126,156 @@ TEST(TriangleTest, DecisionTable) {
   EXPECT_STREQ("Isosceles", triangle(2, 3, 2));
   EXPECT_STREQ("Isosceles", triangle(3, 2, 2));
   EXPECT_STREQ("Scalene", triangle(3, 4, 5));
+}
+
+
+/* === Code-based Testing - Path Testing === */
+
+// C0: Statement coverage
+TEST(TriangleTest, CodeCoverageC0) {
+  EXPECT_STREQ("Value of a is not in the range of permitted values", triangle(-1, 1, 1));
+  EXPECT_STREQ("Value of b is not in the range of permitted values", triangle(1, -1, 1));
+  EXPECT_STREQ("Value of c is not in the range of permitted values", triangle(1, 1, -1));
+  EXPECT_STREQ("Value of a,b is not in the range of permitted values", triangle(-1, -1, 1));
+  EXPECT_STREQ("Value of a,c is not in the range of permitted values", triangle(-1, 1, -1));
+  EXPECT_STREQ("Value of b,c is not in the range of permitted values", triangle(1, -1, -1));
+  EXPECT_STREQ("Value of a,b,c is not in the range of permitted values", triangle(-1, -1, -1));
+  EXPECT_STREQ("NotATriangle", triangle(1, 2, 3));
+  EXPECT_STREQ("Equilateral", triangle(1, 1, 1));
+  EXPECT_STREQ("Scalene", triangle(3, 4, 5));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+}
+
+// C1: DD-path coverage
+TEST(TriangleTest, CodeCoverageC1) {
+
+  // line 9 to 22
+  EXPECT_STREQ("Value of a is not in the range of permitted values", triangle(-1, 1, 1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Value of b is not in the range of permitted values", triangle(1, -1, 1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Value of c is not in the range of permitted values", triangle(1, 1, -1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Value of a,b is not in the range of permitted values", triangle(-1, -1, 1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Value of a,c is not in the range of permitted values", triangle(-1, 1, -1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Value of b,c is not in the range of permitted values", triangle(1, -1, -1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Value of a,b,c is not in the range of permitted values", triangle(-1, -1, -1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  // line 24 branch
+  EXPECT_STREQ("NotATriangle", triangle(1, 2, 3));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  // line 28 to 33
+  EXPECT_STREQ("Equilateral", triangle(1, 1, 1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Scalene", triangle(3, 4, 5));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+}
+
+// C2: DD-path coverage + Simple loop coverage
+TEST(TriangleTest, CodeCoverageC2) {
+
+  // no loop => same as C1
+
+  // line 9 to 22
+  EXPECT_STREQ("Value of a is not in the range of permitted values", triangle(-1, 1, 1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Value of b is not in the range of permitted values", triangle(1, -1, 1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Value of c is not in the range of permitted values", triangle(1, 1, -1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Value of a,b is not in the range of permitted values", triangle(-1, -1, 1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Value of a,c is not in the range of permitted values", triangle(-1, 1, -1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Value of b,c is not in the range of permitted values", triangle(1, -1, -1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Value of a,b,c is not in the range of permitted values", triangle(-1, -1, -1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  // line 24 branch
+  EXPECT_STREQ("NotATriangle", triangle(1, 2, 3));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  // line 28 to 33
+  EXPECT_STREQ("Equilateral", triangle(1, 1, 1));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+
+  EXPECT_STREQ("Scalene", triangle(3, 4, 5));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+}
+
+// MCDC: Modified condition/decision coverage
+TEST(TriangleTest, CodeCoverageMCDC) {
+
+  // line 9 to 22
+  EXPECT_STREQ("Value of a is not in the range of permitted values", triangle(-1, 1, 1));
+  EXPECT_STREQ("Equilateral", triangle(1, 1, 1));
+  EXPECT_STREQ("Value of a,b is not in the range of permitted values", triangle(-1, -1, 1));
+  EXPECT_STREQ("Value of a,c is not in the range of permitted values", triangle(-1, 1, -1));
+
+  EXPECT_STREQ("Value of b is not in the range of permitted values", triangle(1, -1, 1));
+  EXPECT_STREQ("Value of a,b is not in the range of permitted values", triangle(-1, -1, 1));
+  EXPECT_STREQ("Equilateral", triangle(1, 1, 1));
+  EXPECT_STREQ("Value of b,c is not in the range of permitted values", triangle(1, -1, -1));
+
+  EXPECT_STREQ("Value of c is not in the range of permitted values", triangle(1, 1, -1));
+  EXPECT_STREQ("Value of a,c is not in the range of permitted values", triangle(-1, 1, -1));
+  EXPECT_STREQ("Value of b,c is not in the range of permitted values", triangle(1, -1, -1));
+  EXPECT_STREQ("Equilateral", triangle(1, 1, 1));
+
+  EXPECT_STREQ("Value of a,b is not in the range of permitted values", triangle(-1, -1, 1));
+  EXPECT_STREQ("Value of b is not in the range of permitted values", triangle(1, -1, 1));
+  EXPECT_STREQ("Value of a is not in the range of permitted values", triangle(-1, 1, 1));
+  EXPECT_STREQ("Value of a,b,c is not in the range of permitted values", triangle(-1, -1, -1));
+
+  EXPECT_STREQ("Value of a,c is not in the range of permitted values", triangle(-1, 1, -1));
+  EXPECT_STREQ("Value of c is not in the range of permitted values", triangle(1, 1, -1));
+  EXPECT_STREQ("Value of a,b,c is not in the range of permitted values", triangle(-1, -1, -1));
+  EXPECT_STREQ("Value of a is not in the range of permitted values", triangle(-1, 1, 1));
+
+  EXPECT_STREQ("Value of b,c is not in the range of permitted values", triangle(1, -1, -1));
+  EXPECT_STREQ("Value of a,b,c is not in the range of permitted values", triangle(-1, -1, -1));
+  EXPECT_STREQ("Value of c is not in the range of permitted values", triangle(1, 1, -1));
+  EXPECT_STREQ("Value of b is not in the range of permitted values", triangle(1, -1, 1));
+
+  EXPECT_STREQ("Value of a,b,c is not in the range of permitted values", triangle(-1, -1, -1));
+  EXPECT_STREQ("Value of b,c is not in the range of permitted values", triangle(1, -1, -1));
+  EXPECT_STREQ("Value of a,c is not in the range of permitted values", triangle(-1, 1, -1));
+  EXPECT_STREQ("Value of a,b is not in the range of permitted values", triangle(-1, -1, 1));
+
+  // line 24 branch
+  EXPECT_STREQ("NotATriangle", triangle(1, 2, 3));
+  EXPECT_STREQ("NotATriangle", triangle(2, 3, 1));
+  EXPECT_STREQ("NotATriangle", triangle(3, 2, 1));
+
+  // line 28 branch
+  EXPECT_STREQ("Equilateral", triangle(2, 2, 2));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+  EXPECT_STREQ("Isosceles", triangle(3, 2, 2));
+
+  // line 30 branch
+  EXPECT_STREQ("Scalene", triangle(2, 3, 4));
+  EXPECT_STREQ("Isosceles", triangle(2, 2, 3));
+  EXPECT_STREQ("Isosceles", triangle(2, 3, 2));
+  EXPECT_STREQ("Isosceles", triangle(3, 2, 2));
+
 }
