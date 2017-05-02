@@ -25,7 +25,7 @@ USER_DIR = ../triangle
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread
+CXXFLAGS += -g -Wall -Wextra -pthread -ftest-coverage -fprofile-arcs
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
@@ -41,7 +41,48 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 all : $(TESTS)
 
 clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o
+	rm -f $(TESTS) gtest.a gtest_main.a *.o *.gcno *.gcda *.gcov
+
+test :
+	rm -f *.gcda
+	./triangle_unittest --gtest_filter="TriangleTest.*Boundary"
+	gcov -b triangle.o
+	mv triangle.cc.gcov triangle.cc.Boundary.branch.gcov
+
+	rm -f *.gcda
+	./triangle_unittest --gtest_filter="TriangleTest.Equivalence*"
+	gcov -b triangle.o
+	mv triangle.cc.gcov triangle.cc.Equivalence.branch.gcov
+
+	rm -f *.gcda
+	./triangle_unittest --gtest_filter="TriangleTest.Edge*"
+	gcov -b triangle.o
+	mv triangle.cc.gcov triangle.cc.Edge.branch.gcov
+
+	rm -f *.gcda
+	./triangle_unittest --gtest_filter="TriangleTest.DecisionTable"
+	gcov -b triangle.o
+	mv triangle.cc.gcov triangle.cc.DecisionTable.branch.gcov
+
+	rm -f *.gcda
+	./triangle_unittest --gtest_filter="TriangleTest.CodeCoverageC0"
+	gcov -b triangle.o
+	mv triangle.cc.gcov triangle.cc.C0.branch.gcov
+	
+	rm -f *.gcda
+	./triangle_unittest --gtest_filter="TriangleTest.CodeCoverageC1"
+	gcov -b triangle.o
+	mv triangle.cc.gcov triangle.cc.C1.branch.gcov
+
+	rm -f *.gcda
+	./triangle_unittest --gtest_filter="TriangleTest.CodeCoverageC2"
+	gcov -b triangle.o
+	mv triangle.cc.gcov triangle.cc.C2.branch.gcov
+
+	rm -f *.gcda
+	./triangle_unittest --gtest_filter="TriangleTest.CodeCoverageMCDC"
+	gcov -b triangle.o
+	mv triangle.cc.gcov triangle.cc.MCDC.branch.gcov
 
 # Builds gtest.a and gtest_main.a.
 
