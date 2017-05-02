@@ -1,0 +1,104 @@
+        -:    0:Source:../triangle/triangle.cc
+        -:    0:Graph:triangle.gcno
+        -:    0:Data:triangle.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include "triangle.h"
+        -:    2:
+        -:    3:// Returns triangle type. (upper bound 200)
+function _Z8triangleiii called 38 returned 100% blocks executed 100%
+        -:    4:const char* triangle(int a, int b, int c) {
+       99:    5:  int a_out_range = (a < 1 || a > 200);
+branch  0 taken 61%
+branch  1 taken 39%
+       99:    6:  int b_out_range = (b < 1 || b > 200);
+branch  0 taken 61%
+branch  1 taken 39%
+       99:    7:  int c_out_range = (c < 1 || c > 200);
+branch  0 taken 61%
+branch  1 taken 39%
+        -:    8:
+       60:    9:  if (a_out_range && !b_out_range && !c_out_range)
+branch  0 taken 39%
+branch  1 taken 61%
+branch  2 taken 47%
+branch  3 taken 53%
+branch  4 taken 43%
+branch  5 taken 57%
+        3:   10:    return "Value of a is not in the range of permitted values";
+       65:   11:  else if (!a_out_range && b_out_range && !c_out_range)
+branch  0 taken 66%
+branch  1 taken 34%
+branch  2 taken 30%
+branch  3 taken 70%
+branch  4 taken 43%
+branch  5 taken 57%
+        3:   12:    return "Value of b is not in the range of permitted values";
+       68:   13:  else if (!a_out_range && !b_out_range && c_out_range)
+branch  0 taken 63%
+branch  1 taken 38%
+branch  2 taken 80%
+branch  3 taken 20%
+branch  4 taken 19%
+branch  5 taken 81%
+        3:   14:    return "Value of c is not in the range of permitted values";
+       49:   15:  else if (a_out_range && b_out_range && !c_out_range)
+branch  0 taken 41%
+branch  1 taken 59%
+branch  2 taken 67%
+branch  3 taken 33%
+branch  4 taken 50%
+branch  5 taken 50%
+        4:   16:    return "Value of a,b is not in the range of permitted values";
+       37:   17:  else if (a_out_range && !b_out_range && c_out_range)
+branch  0 taken 32%
+branch  1 taken 68%
+branch  2 taken 50%
+branch  3 taken 50%
+branch  4 taken 100%
+branch  5 taken 0%
+        4:   18:    return "Value of a,c is not in the range of permitted values";
+       42:   19:  else if (!a_out_range && b_out_range && c_out_range)
+branch  0 taken 81%
+branch  1 taken 19%
+branch  2 taken 24%
+branch  3 taken 76%
+branch  4 taken 100%
+branch  5 taken 0%
+        4:   20:    return "Value of b,c is not in the range of permitted values";
+       25:   21:  else if (a_out_range && b_out_range && c_out_range)
+branch  0 taken 24%
+branch  1 taken 76%
+branch  2 taken 100%
+branch  3 taken 0%
+branch  4 taken 100%
+branch  5 taken 0%
+        4:   22:    return "Value of a,b,c is not in the range of permitted values";
+        -:   23:
+       36:   24:  if (a + b <= c || b + c <= a || c + a <= b) {
+branch  0 taken 92%
+branch  1 taken 8%
+branch  2 taken 92%
+branch  3 taken 8%
+branch  4 taken 9%
+branch  5 taken 91%
+        3:   25:    return "NotATriangle";
+        -:   26:  }
+        -:   27:
+       16:   28:  if (a == b && b == c)
+branch  0 taken 60%
+branch  1 taken 40%
+branch  2 taken 67%
+branch  3 taken 33%
+        4:   29:    return "Equilateral";
+       13:   30:  else if (a != b && a != c && b != c)
+branch  0 taken 67%
+branch  1 taken 33%
+branch  2 taken 75%
+branch  3 taken 25%
+branch  4 taken 33%
+branch  5 taken 67%
+        1:   31:    return "Scalene";
+        -:   32:  else
+        5:   33:    return "Isosceles";
+       38:   34:}
