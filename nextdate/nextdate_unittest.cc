@@ -3,6 +3,8 @@
 
 // Tests nextdate().
 
+/* === Specification-based Testing === */
+
 // Boundary Value Testing
 // Standard
 TEST(NextdateTest, StdBoundary) {
@@ -281,4 +283,178 @@ TEST(NextdateTest, DecisionTable) {
   EXPECT_STREQ("3/1/2004", nextdate(2, 29, 2004));
   EXPECT_STREQ("Invalid input date", nextdate(2, 29, 2001));
   EXPECT_STREQ("Invalid input date", nextdate(2, 30, 2001));
+}
+
+
+/* === Code-based Testing - Path Testing === */
+
+// C0: Statement coverage
+TEST(NextdateTest, CodeCoverageC0) {
+
+  // line 12 to 25
+  EXPECT_STREQ("month not in range", nextdate(-1, 14, 1912));
+  EXPECT_STREQ("day not in range", nextdate(6, -1, 2000));
+  EXPECT_STREQ("year not in range", nextdate(6, 14, 1811));
+  EXPECT_STREQ("month and day not in range", nextdate(-1, -1, 1912));
+  EXPECT_STREQ("month and year not in range", nextdate(-1, 14, 1811));
+  EXPECT_STREQ("day and year not in range", nextdate(6, -1, 1811));
+  EXPECT_STREQ("month and day and year not in range", nextdate(-1, -1, 1811));
+
+  // line 31 to 73
+  EXPECT_STREQ("1/31/1912", nextdate(1, 30, 1912));
+  EXPECT_STREQ("2/1/1912", nextdate(1, 31, 1912));
+  EXPECT_STREQ("4/30/1912", nextdate(4, 29, 1912));
+  EXPECT_STREQ("5/1/1912", nextdate(4, 30, 1912));
+  EXPECT_STREQ("Invalid input date", nextdate(4, 31, 1912));
+  EXPECT_STREQ("12/31/1912", nextdate(12, 30, 1912));
+  EXPECT_STREQ("1/1/1913", nextdate(12, 31, 1912));
+  EXPECT_STREQ("2/28/2001", nextdate(2, 27, 2001));
+  EXPECT_STREQ("3/1/2001", nextdate(2, 28, 2001));
+  EXPECT_STREQ("2/29/2004", nextdate(2, 28, 2004));
+  EXPECT_STREQ("3/1/2004", nextdate(2, 29, 2004));
+  EXPECT_STREQ("Invalid input date", nextdate(2, 29, 2001));
+  EXPECT_STREQ("Invalid input date", nextdate(2, 30, 2001));
+
+}
+
+// C1: DD-path coverage
+TEST(NextdateTest, CodeCoverageC1) {
+
+  // line 12 to 25
+  EXPECT_STREQ("month not in range", nextdate(-1, 14, 1912));
+  EXPECT_STREQ("day not in range", nextdate(6, -1, 2000));
+
+  EXPECT_STREQ("day not in range", nextdate(6, -1, 2000));
+  EXPECT_STREQ("year not in range", nextdate(6, 14, 1811));
+
+  EXPECT_STREQ("year not in range", nextdate(6, 14, 1811));
+  EXPECT_STREQ("month and day not in range", nextdate(-1, -1, 1912));
+
+  EXPECT_STREQ("month and day not in range", nextdate(-1, -1, 1912));
+  EXPECT_STREQ("month and year not in range", nextdate(-1, 14, 1811));
+
+  EXPECT_STREQ("month and year not in range", nextdate(-1, 14, 1811));
+  EXPECT_STREQ("day and year not in range", nextdate(6, -1, 1811));
+
+  EXPECT_STREQ("day and year not in range", nextdate(6, -1, 1811));
+  EXPECT_STREQ("month and day and year not in range", nextdate(-1, -1, 1811));
+
+  EXPECT_STREQ("month and day and year not in range", nextdate(-1, -1, 1811));
+  EXPECT_STREQ("6/16/1912", nextdate(6, 15, 1912));
+
+  // line 31 to 73
+  EXPECT_STREQ("1/31/1912", nextdate(1, 30, 1912));
+  EXPECT_STREQ("2/1/1912", nextdate(1, 31, 1912));
+  EXPECT_STREQ("4/30/1912", nextdate(4, 29, 1912));
+  EXPECT_STREQ("5/1/1912", nextdate(4, 30, 1912));
+  EXPECT_STREQ("Invalid input date", nextdate(4, 31, 1912));
+  EXPECT_STREQ("12/31/1912", nextdate(12, 30, 1912));
+  EXPECT_STREQ("1/1/1913", nextdate(12, 31, 1912));
+  EXPECT_STREQ("2/28/2001", nextdate(2, 27, 2001));
+  EXPECT_STREQ("3/1/2001", nextdate(2, 28, 2001));
+  EXPECT_STREQ("2/29/2004", nextdate(2, 28, 2004));
+  EXPECT_STREQ("3/1/2004", nextdate(2, 29, 2004));
+  EXPECT_STREQ("Invalid input date", nextdate(2, 29, 2001));
+  EXPECT_STREQ("Invalid input date", nextdate(2, 30, 2001));
+
+}
+
+// C2: DD-path coverage + Simple loop coverage
+TEST(NextdateTest, CodeCoverageC2) {
+
+  // no loop => same as C1
+
+  // line 12 to 25
+  EXPECT_STREQ("month not in range", nextdate(-1, 14, 1912));
+  EXPECT_STREQ("day not in range", nextdate(6, -1, 2000));
+
+  EXPECT_STREQ("day not in range", nextdate(6, -1, 2000));
+  EXPECT_STREQ("year not in range", nextdate(6, 14, 1811));
+
+  EXPECT_STREQ("year not in range", nextdate(6, 14, 1811));
+  EXPECT_STREQ("month and day not in range", nextdate(-1, -1, 1912));
+
+  EXPECT_STREQ("month and day not in range", nextdate(-1, -1, 1912));
+  EXPECT_STREQ("month and year not in range", nextdate(-1, 14, 1811));
+
+  EXPECT_STREQ("month and year not in range", nextdate(-1, 14, 1811));
+  EXPECT_STREQ("day and year not in range", nextdate(6, -1, 1811));
+
+  EXPECT_STREQ("day and year not in range", nextdate(6, -1, 1811));
+  EXPECT_STREQ("month and day and year not in range", nextdate(-1, -1, 1811));
+
+  EXPECT_STREQ("month and day and year not in range", nextdate(-1, -1, 1811));
+  EXPECT_STREQ("6/16/1912", nextdate(6, 15, 1912));
+
+  // line 31 to 73
+  EXPECT_STREQ("1/31/1912", nextdate(1, 30, 1912));
+  EXPECT_STREQ("2/1/1912", nextdate(1, 31, 1912));
+  EXPECT_STREQ("4/30/1912", nextdate(4, 29, 1912));
+  EXPECT_STREQ("5/1/1912", nextdate(4, 30, 1912));
+  EXPECT_STREQ("Invalid input date", nextdate(4, 31, 1912));
+  EXPECT_STREQ("12/31/1912", nextdate(12, 30, 1912));
+  EXPECT_STREQ("1/1/1913", nextdate(12, 31, 1912));
+  EXPECT_STREQ("2/28/2001", nextdate(2, 27, 2001));
+  EXPECT_STREQ("3/1/2001", nextdate(2, 28, 2001));
+  EXPECT_STREQ("2/29/2004", nextdate(2, 28, 2004));
+  EXPECT_STREQ("3/1/2004", nextdate(2, 29, 2004));
+  EXPECT_STREQ("Invalid input date", nextdate(2, 29, 2001));
+  EXPECT_STREQ("Invalid input date", nextdate(2, 30, 2001));
+
+}
+
+// MCDC: Modified condition/decision coverage
+TEST(NextdateTest, CodeCoverageMCDC) {
+
+  // line 12 to 25
+  EXPECT_STREQ("month not in range", nextdate(-1, 14, 1912));
+  EXPECT_STREQ("1/15/1912", nextdate(1, 14, 1912));
+  EXPECT_STREQ("month and day not in range", nextdate(-1, -1, 1912));
+  EXPECT_STREQ("month and year not in range", nextdate(-1, 14, 1811));
+
+  EXPECT_STREQ("day not in range", nextdate(6, -1, 2000));
+  EXPECT_STREQ("month and day not in range", nextdate(-1, -1, 2000));
+  EXPECT_STREQ("6/2/2000", nextdate(6, 1, 2000));
+  EXPECT_STREQ("day and year not in range", nextdate(6, -1, 1811));
+
+  EXPECT_STREQ("year not in range", nextdate(6, 14, 1811));
+  EXPECT_STREQ("month and year not in range", nextdate(-1, 14, 1811));
+  EXPECT_STREQ("day and year not in range", nextdate(6, -1, 1811));
+  EXPECT_STREQ("1/15/1912", nextdate(1, 14, 1912));
+
+  EXPECT_STREQ("month and day not in range", nextdate(-1, -1, 1912));
+  EXPECT_STREQ("day not in range", nextdate(6, -1, 1912));
+  EXPECT_STREQ("month not in range", nextdate(-1, 14, 1912));
+  EXPECT_STREQ("month and day and year not in range", nextdate(-1, -1, 1811));
+
+  EXPECT_STREQ("month and year not in range", nextdate(-1, 14, 1811));
+  EXPECT_STREQ("year not in range", nextdate(6, 14, 1811));
+  EXPECT_STREQ("month and day and year not in range", nextdate(-1, -1, 1811));
+  EXPECT_STREQ("month not in range", nextdate(-1, 14, 1912));
+
+  EXPECT_STREQ("day and year not in range", nextdate(6, -1, 1811));
+  EXPECT_STREQ("month and day and year not in range", nextdate(-1, -1, 1811));
+  EXPECT_STREQ("year not in range", nextdate(6, 14, 1811));
+  EXPECT_STREQ("day not in range", nextdate(6, -1, 1912));
+
+  EXPECT_STREQ("month and day and year not in range", nextdate(-1, -1, 1811));
+  EXPECT_STREQ("day and year not in range", nextdate(6, -1, 1811));
+  EXPECT_STREQ("month and year not in range", nextdate(-1, 14, 1811));
+  EXPECT_STREQ("month and day not in range", nextdate(-1, -1, 1912));
+
+  // line 31 to 73
+  EXPECT_STREQ("4/16/2001", nextdate(4, 15, 2001));
+  EXPECT_STREQ("5/1/2001", nextdate(4, 30, 2001));
+  EXPECT_STREQ("Invalid input date", nextdate(4, 31, 2001));
+  EXPECT_STREQ("1/16/2001", nextdate(1, 15, 2001));
+  EXPECT_STREQ("2/1/2001", nextdate(1, 31, 2001));
+  EXPECT_STREQ("12/16/2001", nextdate(12, 15, 2001));
+  EXPECT_STREQ("1/1/2002", nextdate(12, 31, 2001));
+  EXPECT_STREQ("2/16/2001", nextdate(2, 15, 2001));
+  EXPECT_STREQ("2/29/2004", nextdate(2, 28, 2004));
+  EXPECT_STREQ("3/1/2001", nextdate(2, 28, 2001));
+  EXPECT_STREQ("3/1/2004", nextdate(2, 29, 2004));
+  EXPECT_STREQ("Invalid input date", nextdate(2, 29, 2001));
+  EXPECT_STREQ("Invalid input date", nextdate(2, 30, 2001));
+
 }
