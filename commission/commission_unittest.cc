@@ -2,6 +2,9 @@
 #include "gtest/gtest.h"
 
 // Tests commission().
+
+/* === Specification-based Testing === */
+
 // Standard
 TEST(CommissionTest, StdBoundary) {
   EXPECT_DOUBLE_EQ(10, commission(1, 1, 1));
@@ -92,4 +95,166 @@ TEST(CommissionTest, EdgeR) {
 
 // Decision Table Testing
 // Generate same cases of Equivalence Class Testing
-// No need to test again
+TEST(CommissionTest, DecisionTable) {
+  EXPECT_EXIT(commission(-2, 40, 45), ::testing::ExitedWithCode(1), "Value of locks not in the range");
+  EXPECT_EXIT(commission(-1, 40, 45), ::testing::ExitedWithCode(0), "Program terminates");
+  EXPECT_EXIT(commission(0, 40, 45), ::testing::ExitedWithCode(1), "Value of locks not in the range");
+  EXPECT_DOUBLE_EQ(334, commission(1, 40, 45));
+  EXPECT_DOUBLE_EQ(946, commission(69, 40, 45));
+  EXPECT_DOUBLE_EQ(955, commission(70, 40, 45));
+  EXPECT_EXIT(commission(71, 40, 45), ::testing::ExitedWithCode(1), "Value of locks not in the range");
+
+  EXPECT_EXIT(commission(35, 0, 45), ::testing::ExitedWithCode(1), "Value of stocks not in the range");
+  EXPECT_DOUBLE_EQ(406, commission(35, 1, 45));
+  EXPECT_DOUBLE_EQ(412, commission(35, 2, 45));
+  EXPECT_DOUBLE_EQ(874, commission(35, 79, 45));
+  EXPECT_DOUBLE_EQ(880, commission(35, 80, 45));
+  EXPECT_EXIT(commission(35, 81, 45), ::testing::ExitedWithCode(1), "Value of stocks not in the range");
+
+  EXPECT_EXIT(commission(35, 40, 0), ::testing::ExitedWithCode(1), "Value of barrels not in the range");
+  EXPECT_DOUBLE_EQ(420, commission(35, 40, 1));
+  EXPECT_DOUBLE_EQ(425, commission(35, 40, 2));
+  EXPECT_DOUBLE_EQ(860, commission(35, 40, 89));
+  EXPECT_DOUBLE_EQ(865, commission(35, 40, 90));
+  EXPECT_EXIT(commission(35, 40, 91), ::testing::ExitedWithCode(1), "Value of barrels not in the range");
+}
+
+
+/* === Code-based Testing - Path Testing === */
+
+// C0: Statement coverage
+TEST(CommissionTest, CodeCoverageC0) {
+  EXPECT_EXIT(commission(-1, 40, 45), ::testing::ExitedWithCode(0), "Program terminates");
+  EXPECT_EXIT(commission(-2, 40, 45), ::testing::ExitedWithCode(1), "Value of locks not in the range");
+  EXPECT_EXIT(commission(35, -1, 45), ::testing::ExitedWithCode(1), "Value of stocks not in the range");
+  EXPECT_EXIT(commission(35, 40, -2), ::testing::ExitedWithCode(1), "Value of barrels not in the range");
+  EXPECT_EXIT(commission(-2, -1, 45), ::testing::ExitedWithCode(1), "Value of locks and stocks not in the range");
+  EXPECT_EXIT(commission(-2, 40, -1), ::testing::ExitedWithCode(1), "Value of locks and barrels not in the range");
+  EXPECT_EXIT(commission(35, -1, -1), ::testing::ExitedWithCode(1), "Value of stocks and barrels not in the range");
+  EXPECT_EXIT(commission(-2, -1, -1), ::testing::ExitedWithCode(1), "Value of locks and stocks and barrels not in the range");
+  EXPECT_DOUBLE_EQ(221, commission(18, 19, 17)); // sales = 1805
+  EXPECT_DOUBLE_EQ(100.75, commission(10, 11, 9)); // sales = 1005
+  EXPECT_DOUBLE_EQ(10, commission(1, 1, 1));
+}
+
+// C1: DD-path coverage
+TEST(CommissionTest, CodeCoverageC1) {
+  EXPECT_EXIT(commission(-1, 40, 45), ::testing::ExitedWithCode(0), "Program terminates");
+  EXPECT_DOUBLE_EQ(10, commission(1, 1, 1));
+
+  EXPECT_EXIT(commission(-2, 40, 45), ::testing::ExitedWithCode(1), "Value of locks not in the range");
+  EXPECT_EXIT(commission(35, -1, 45), ::testing::ExitedWithCode(1), "Value of stocks not in the range");
+
+  EXPECT_EXIT(commission(35, -1, 45), ::testing::ExitedWithCode(1), "Value of stocks not in the range");
+  EXPECT_EXIT(commission(35, 40, -2), ::testing::ExitedWithCode(1), "Value of barrels not in the range");
+
+  EXPECT_EXIT(commission(35, 40, -2), ::testing::ExitedWithCode(1), "Value of barrels not in the range");
+  EXPECT_EXIT(commission(-2, -1, 45), ::testing::ExitedWithCode(1), "Value of locks and stocks not in the range");
+
+  EXPECT_EXIT(commission(-2, -1, 45), ::testing::ExitedWithCode(1), "Value of locks and stocks not in the range");
+  EXPECT_EXIT(commission(-2, 40, -1), ::testing::ExitedWithCode(1), "Value of locks and barrels not in the range");
+
+  EXPECT_EXIT(commission(-2, 40, -1), ::testing::ExitedWithCode(1), "Value of locks and barrels not in the range");
+  EXPECT_EXIT(commission(35, -1, -1), ::testing::ExitedWithCode(1), "Value of stocks and barrels not in the range");
+
+  EXPECT_EXIT(commission(35, -1, -1), ::testing::ExitedWithCode(1), "Value of stocks and barrels not in the range");
+  EXPECT_EXIT(commission(-2, -1, -1), ::testing::ExitedWithCode(1), "Value of locks and stocks and barrels not in the range");
+
+  EXPECT_EXIT(commission(-2, -1, -1), ::testing::ExitedWithCode(1), "Value of locks and stocks and barrels not in the range");
+  EXPECT_DOUBLE_EQ(221, commission(18, 19, 17));
+
+  EXPECT_DOUBLE_EQ(221, commission(18, 19, 17)); // sales = 1805
+  EXPECT_DOUBLE_EQ(100.75, commission(10, 11, 9)); // sales = 1005
+
+  EXPECT_DOUBLE_EQ(100.75, commission(10, 11, 9)); // sales = 1005
+  EXPECT_DOUBLE_EQ(10, commission(1, 1, 1));
+}
+
+// C2: DD-path coverage + Simple loop coverage
+TEST(CommissionTest, CodeCoverageC2) {
+
+  // no loop => same as C1
+
+  EXPECT_EXIT(commission(-1, 40, 45), ::testing::ExitedWithCode(0), "Program terminates");
+  EXPECT_DOUBLE_EQ(10, commission(1, 1, 1));
+
+  EXPECT_EXIT(commission(-2, 40, 45), ::testing::ExitedWithCode(1), "Value of locks not in the range");
+  EXPECT_EXIT(commission(35, -1, 45), ::testing::ExitedWithCode(1), "Value of stocks not in the range");
+
+  EXPECT_EXIT(commission(35, -1, 45), ::testing::ExitedWithCode(1), "Value of stocks not in the range");
+  EXPECT_EXIT(commission(35, 40, -2), ::testing::ExitedWithCode(1), "Value of barrels not in the range");
+
+  EXPECT_EXIT(commission(35, 40, -2), ::testing::ExitedWithCode(1), "Value of barrels not in the range");
+  EXPECT_EXIT(commission(-2, -1, 45), ::testing::ExitedWithCode(1), "Value of locks and stocks not in the range");
+
+  EXPECT_EXIT(commission(-2, -1, 45), ::testing::ExitedWithCode(1), "Value of locks and stocks not in the range");
+  EXPECT_EXIT(commission(-2, 40, -1), ::testing::ExitedWithCode(1), "Value of locks and barrels not in the range");
+
+  EXPECT_EXIT(commission(-2, 40, -1), ::testing::ExitedWithCode(1), "Value of locks and barrels not in the range");
+  EXPECT_EXIT(commission(35, -1, -1), ::testing::ExitedWithCode(1), "Value of stocks and barrels not in the range");
+
+  EXPECT_EXIT(commission(35, -1, -1), ::testing::ExitedWithCode(1), "Value of stocks and barrels not in the range");
+  EXPECT_EXIT(commission(-2, -1, -1), ::testing::ExitedWithCode(1), "Value of locks and stocks and barrels not in the range");
+
+  EXPECT_EXIT(commission(-2, -1, -1), ::testing::ExitedWithCode(1), "Value of locks and stocks and barrels not in the range");
+  EXPECT_DOUBLE_EQ(221, commission(18, 19, 17));
+
+  EXPECT_DOUBLE_EQ(221, commission(18, 19, 17)); // sales = 1805
+  EXPECT_DOUBLE_EQ(100.75, commission(10, 11, 9)); // sales = 1005
+
+  EXPECT_DOUBLE_EQ(100.75, commission(10, 11, 9)); // sales = 1005
+  EXPECT_DOUBLE_EQ(10, commission(1, 1, 1));
+
+}
+
+// MCDC: Modified condition/decision coverage
+TEST(CommissionTest, CodeCoverageMCDC) {
+  EXPECT_EXIT(commission(-1, 40, 45), ::testing::ExitedWithCode(0), "Program terminates");
+  EXPECT_DOUBLE_EQ(334, commission(1, 40, 45));
+
+  EXPECT_EXIT(commission(-2, 40, 45), ::testing::ExitedWithCode(1), "Value of locks not in the range");
+  EXPECT_DOUBLE_EQ(334, commission(1, 40, 45));
+  EXPECT_EXIT(commission(-2, -1, 45), ::testing::ExitedWithCode(1), "Value of locks and stocks not in the range");
+  EXPECT_EXIT(commission(-2, 40, -1), ::testing::ExitedWithCode(1), "Value of locks and barrels not in the range");
+
+  EXPECT_EXIT(commission(35, -1, 45), ::testing::ExitedWithCode(1), "Value of stocks not in the range");
+  EXPECT_EXIT(commission(-2, -1, 45), ::testing::ExitedWithCode(1), "Value of locks and stocks not in the range");
+  EXPECT_DOUBLE_EQ(406, commission(35, 1, 45));
+  EXPECT_EXIT(commission(35, -1, -1), ::testing::ExitedWithCode(1), "Value of stocks and barrels not in the range");
+
+  EXPECT_EXIT(commission(35, 40, -1), ::testing::ExitedWithCode(1), "Value of barrels not in the range");
+  EXPECT_EXIT(commission(-2, 40, -1), ::testing::ExitedWithCode(1), "Value of locks and barrels not in the range");
+  EXPECT_EXIT(commission(35, -1, -1), ::testing::ExitedWithCode(1), "Value of stocks and barrels not in the range");
+  EXPECT_DOUBLE_EQ(420, commission(35, 40, 1));
+
+  EXPECT_EXIT(commission(-2, -1, 45), ::testing::ExitedWithCode(1), "Value of locks and stocks not in the range");
+  EXPECT_EXIT(commission(35, -1, 45), ::testing::ExitedWithCode(1), "Value of stocks not in the range");
+  EXPECT_EXIT(commission(-2, 40, 45), ::testing::ExitedWithCode(1), "Value of locks not in the range");
+  EXPECT_EXIT(commission(-2, -1, -1), ::testing::ExitedWithCode(1), "Value of locks and stocks and barrels not in the range");
+
+  EXPECT_EXIT(commission(-2, 40, -1), ::testing::ExitedWithCode(1), "Value of locks and barrels not in the range");
+  EXPECT_EXIT(commission(35, 40, -1), ::testing::ExitedWithCode(1), "Value of barrels not in the range");
+  EXPECT_EXIT(commission(-2, -1, -1), ::testing::ExitedWithCode(1), "Value of locks and stocks and barrels not in the range");
+  EXPECT_EXIT(commission(-2, 40, 45), ::testing::ExitedWithCode(1), "Value of locks not in the range");
+
+  EXPECT_EXIT(commission(35, -1, -1), ::testing::ExitedWithCode(1), "Value of stocks and barrels not in the range");
+  EXPECT_EXIT(commission(-2, -1, -1), ::testing::ExitedWithCode(1), "Value of locks and stocks and barrels not in the range");
+  EXPECT_EXIT(commission(35, 40, -1), ::testing::ExitedWithCode(1), "Value of barrels not in the range");
+  EXPECT_EXIT(commission(35, -1, 45), ::testing::ExitedWithCode(1), "Value of stocks not in the range");
+
+  EXPECT_EXIT(commission(-2, -1, -1), ::testing::ExitedWithCode(1), "Value of locks and stocks and barrels not in the range");
+  EXPECT_EXIT(commission(35, -1, -1), ::testing::ExitedWithCode(1), "Value of stocks and barrels not in the range");
+  EXPECT_EXIT(commission(-2, 40, -1), ::testing::ExitedWithCode(1), "Value of locks and barrels not in the range");
+  EXPECT_EXIT(commission(-2, -1, 45), ::testing::ExitedWithCode(1), "Value of locks and stocks not in the range");
+
+  EXPECT_DOUBLE_EQ(224, commission(18, 17, 20)); // sales = 1820
+  EXPECT_DOUBLE_EQ(216.25, commission(17, 17, 20)); // sales = 1775
+  EXPECT_DOUBLE_EQ(218.5, commission(18, 16, 20)); // sales = 1790
+  EXPECT_DOUBLE_EQ(219.25, commission(18, 17, 19)); // sales = 1795
+
+  EXPECT_DOUBLE_EQ(100.75, commission(10, 11, 9)); // sales = 1005
+  EXPECT_DOUBLE_EQ(96, commission(9, 11, 9)); // sales = 960
+  EXPECT_DOUBLE_EQ(97.5, commission(10, 10, 9)); // sales = 975
+  EXPECT_DOUBLE_EQ(98, commission(10, 11, 8)); // sales = 980
+
+}
