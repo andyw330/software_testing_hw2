@@ -1,0 +1,183 @@
+        -:    0:Source:../nextdate/nextdate.cc
+        -:    0:Graph:nextdate.gcno
+        -:    0:Data:nextdate.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include "nextdate.h"
+        -:    2:#include <stdio.h>
+        -:    3:
+        -:    4:char date[16];
+        -:    5:
+        -:    6:// Returns next date;
+function _Z8nextdateiii called 73 returned 100% blocks executed 65%
+        -:    7:const char* nextdate(int month, int day, int year) {
+      219:    8:  int month_out_range = (month < 1 || month > 12);
+branch  0 taken 100%
+branch  1 taken 0%
+      219:    9:  int day_out_range = (day < 1 || day > 31);
+branch  0 taken 100%
+branch  1 taken 0%
+      219:   10:  int year_out_range = (year < 1812 || year > 2012);
+branch  0 taken 100%
+branch  1 taken 0%
+        -:   11:
+       73:   12:  if (month_out_range && !day_out_range && !year_out_range)
+branch  0 taken 0%
+branch  1 taken 100%
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+branch  5 never executed
+    #####:   13:    return "month not in range";
+      146:   14:  else if (!month_out_range && day_out_range && !year_out_range)
+branch  0 taken 100%
+branch  1 taken 0%
+branch  2 taken 0%
+branch  3 taken 100%
+branch  4 never executed
+branch  5 never executed
+    #####:   15:    return "day not in range";
+      219:   16:  else if (!month_out_range && !day_out_range && year_out_range)
+branch  0 taken 100%
+branch  1 taken 0%
+branch  2 taken 100%
+branch  3 taken 0%
+branch  4 taken 0%
+branch  5 taken 100%
+    #####:   17:    return "year not in range";
+       73:   18:  else if (month_out_range && day_out_range && !year_out_range)
+branch  0 taken 0%
+branch  1 taken 100%
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+branch  5 never executed
+    #####:   19:    return "month and day not in range";
+       73:   20:  else if (month_out_range && !day_out_range && year_out_range)
+branch  0 taken 0%
+branch  1 taken 100%
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+branch  5 never executed
+    #####:   21:    return "month and year not in range";
+      146:   22:  else if (!month_out_range && day_out_range && year_out_range)
+branch  0 taken 100%
+branch  1 taken 0%
+branch  2 taken 0%
+branch  3 taken 100%
+branch  4 never executed
+branch  5 never executed
+    #####:   23:    return "day and year not in range";
+       73:   24:  else if (month_out_range && day_out_range && year_out_range)
+branch  0 taken 0%
+branch  1 taken 100%
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+branch  5 never executed
+    #####:   25:    return "month and day and year not in range";
+        -:   26:
+       73:   27:  int tomorrowMonth = month;
+       73:   28:  int tomorrowDay = day;
+       73:   29:  int tomorrowYear = year;
+        -:   30:
+      308:   31:  if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10) {
+branch  0 taken 64%
+branch  1 taken 36%
+branch  2 taken 100%
+branch  3 taken 0%
+branch  4 taken 100%
+branch  5 taken 0%
+branch  6 taken 100%
+branch  7 taken 0%
+branch  8 taken 100%
+branch  9 taken 0%
+branch 10 taken 0%
+branch 11 taken 100%
+       26:   32:    if (day < 31)
+branch  0 taken 81%
+branch  1 taken 19%
+       21:   33:      tomorrowDay = day + 1;
+        5:   34:    else if (day == 31) {
+branch  0 taken 100%
+branch  1 taken 0%
+        5:   35:      tomorrowDay = 1;
+        5:   36:      tomorrowMonth = month + 1;
+        5:   37:    } else
+    #####:   38:      return "Invalid input date";
+      176:   39:  } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+branch  0 taken 100%
+branch  1 taken 0%
+branch  2 taken 60%
+branch  3 taken 40%
+branch  4 taken 100%
+branch  5 taken 0%
+branch  6 taken 4%
+branch  7 taken 96%
+       20:   40:    if (day < 30)
+branch  0 taken 90%
+branch  1 taken 10%
+       18:   41:      tomorrowDay = day + 1;
+        2:   42:    else if (day == 30) {
+branch  0 taken 50%
+branch  1 taken 50%
+        1:   43:      tomorrowDay = 1;
+        1:   44:      tomorrowMonth = month + 1;
+        1:   45:    } else
+        1:   46:      return "Invalid input date";
+       46:   47:  } else if (month == 12) {
+branch  0 taken 4%
+branch  1 taken 96%
+        1:   48:    if (day < 31)
+branch  0 taken 100%
+branch  1 taken 0%
+        1:   49:      tomorrowDay = day + 1;
+        -:   50:    else {
+    #####:   51:      tomorrowDay = 1;
+    #####:   52:      tomorrowMonth = 1;
+    #####:   53:      tomorrowYear = year + 1;
+        -:   54:    }
+       27:   55:  } else if (month == 2) {
+branch  0 taken 100%
+branch  1 taken 0%
+       26:   56:    if (day < 28)
+branch  0 taken 62%
+branch  1 taken 38%
+       16:   57:      tomorrowDay = day + 1;
+       10:   58:    else if (day == 28) {
+branch  0 taken 0%
+branch  1 taken 100%
+    #####:   59:      if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) // is leap year
+branch  0 never executed
+branch  1 never executed
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+branch  5 never executed
+    #####:   60:        tomorrowDay = 29;
+        -:   61:      else {
+    #####:   62:        tomorrowDay = 1;
+    #####:   63:        tomorrowMonth = 3;
+        -:   64:      }
+       10:   65:    } else if (day == 29) {
+branch  0 taken 0%
+branch  1 taken 100%
+    #####:   66:      if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) { // is leap year
+branch  0 never executed
+branch  1 never executed
+branch  2 never executed
+branch  3 never executed
+branch  4 never executed
+branch  5 never executed
+    #####:   67:        tomorrowDay = 1;
+    #####:   68:        tomorrowMonth = 3;
+    #####:   69:      } else
+    #####:   70:        return "Invalid input date";
+    #####:   71:    } else
+       10:   72:      return "Invalid input date";
+       16:   73:  }
+        -:   74:
+       62:   75:  sprintf(date, "%d/%d/%d", tomorrowMonth, tomorrowDay, tomorrowYear);
+       62:   76:  return date;
+       73:   77:}
