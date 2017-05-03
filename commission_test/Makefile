@@ -25,7 +25,7 @@ USER_DIR = ../commission
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread
+CXXFLAGS += -g -Wall -Wextra -pthread -ftest-coverage -fprofile-arcs
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
@@ -42,6 +42,47 @@ all : $(TESTS)
 
 clean :
 	rm -f $(TESTS) gtest.a gtest_main.a *.o
+
+test :
+	rm -f *.gcda
+	./commission_unittest --gtest_filter="CommissionTest.*Boundary"
+	gcov -b commission.o
+	mv commission.cc.gcov commission.cc.Boundary.branch.gcov
+
+	rm -f *.gcda
+	./commission_unittest --gtest_filter="CommissionTest.Equivalence*"
+	gcov -b commission.o
+	mv commission.cc.gcov commission.cc.Equivalence.branch.gcov
+
+	rm -f *.gcda
+	./commission_unittest --gtest_filter="CommissionTest.Edge*"
+	gcov -b commission.o
+	mv commission.cc.gcov commission.cc.Edge.branch.gcov
+
+	rm -f *.gcda
+	./commission_unittest --gtest_filter="CommissionTest.DecisionTable"
+	gcov -b commission.o
+	mv commission.cc.gcov commission.cc.DecisionTable.branch.gcov
+
+	rm -f *.gcda
+	./commission_unittest --gtest_filter="CommissionTest.CodeCoverageC0"
+	gcov -b commission.o
+	mv commission.cc.gcov commission.cc.C0.branch.gcov
+	
+	rm -f *.gcda
+	./commission_unittest --gtest_filter="CommissionTest.CodeCoverageC1"
+	gcov -b commission.o
+	mv commission.cc.gcov commission.cc.C1.branch.gcov
+
+	rm -f *.gcda
+	./commission_unittest --gtest_filter="CommissionTest.CodeCoverageC2"
+	gcov -b commission.o
+	mv commission.cc.gcov commission.cc.C2.branch.gcov
+
+	rm -f *.gcda
+	./commission_unittest --gtest_filter="CommissionTest.CodeCoverageMCDC"
+	gcov -b commission.o
+	mv commission.cc.gcov commission.cc.MCDC.branch.gcov
 
 # Builds gtest.a and gtest_main.a.
 
