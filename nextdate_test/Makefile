@@ -25,7 +25,7 @@ USER_DIR = ../nextdate
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread
+CXXFLAGS += -g -Wall -Wextra -pthread -ftest-coverage -fprofile-arcs
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
@@ -41,7 +41,48 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 all : $(TESTS)
 
 clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o
+	rm -f $(TESTS) gtest.a gtest_main.a *.o *.gcno *.gcda *.gcov
+
+test :
+	rm -f *.gcda
+	./nextdate_unittest --gtest_filter="NextdateTest.*Boundary"
+	gcov -b nextdate.o
+	mv nextdate.cc.gcov nextdate.cc.Boundary.branch.gcov
+
+	rm -f *.gcda
+	./nextdate_unittest --gtest_filter="NextdateTest.Equivalence*"
+	gcov -b nextdate.o
+	mv nextdate.cc.gcov nextdate.cc.Equivalence.branch.gcov
+
+	rm -f *.gcda
+	./nextdate_unittest --gtest_filter="NextdateTest.Edge*"
+	gcov -b nextdate.o
+	mv nextdate.cc.gcov nextdate.cc.Edge.branch.gcov
+
+	rm -f *.gcda
+	./nextdate_unittest --gtest_filter="NextdateTest.DecisionTable"
+	gcov -b nextdate.o
+	mv nextdate.cc.gcov nextdate.cc.DecisionTable.branch.gcov
+
+	rm -f *.gcda
+	./nextdate_unittest --gtest_filter="NextdateTest.CodeCoverageC0"
+	gcov -b nextdate.o
+	mv nextdate.cc.gcov nextdate.cc.C0.branch.gcov
+	
+	rm -f *.gcda
+	./nextdate_unittest --gtest_filter="NextdateTest.CodeCoverageC1"
+	gcov -b nextdate.o
+	mv nextdate.cc.gcov nextdate.cc.C1.branch.gcov
+
+	rm -f *.gcda
+	./nextdate_unittest --gtest_filter="NextdateTest.CodeCoverageC2"
+	gcov -b nextdate.o
+	mv nextdate.cc.gcov nextdate.cc.C2.branch.gcov
+
+	rm -f *.gcda
+	./nextdate_unittest --gtest_filter="NextdateTest.CodeCoverageMCDC"
+	gcov -b nextdate.o
+	mv nextdate.cc.gcov nextdate.cc.MCDC.branch.gcov
 
 # Builds gtest.a and gtest_main.a.
 
